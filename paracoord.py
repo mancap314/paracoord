@@ -7,12 +7,17 @@ from matplotlib import collections  as mc
 
 
 def get_cmap(n, name='hsv'):
-    '''Returns a function that maps each index in 0, 1, ..., n-1 to a distinct
-    RGB color; the keyword argument name must be a standard mpl colormap name.'''
+    """
+    Returns a function that maps each index in 0, 1, ..., n-1 to a distinct
+    RGB color; the keyword argument name must be a standard mpl colormap name.
+    """
     return plt.cm.get_cmap(name, n + 1)  # +1 otherwise last color is almost like first one
 
 
 def get_y_min_max(nparr):
+    """
+    takes the min and max value of a numpy array and adds 5% of the length of (min, max) to the min and to the max
+    """
     ymin, ymax = np.amin(nparr), np.amax(nparr)
     length = ymax - ymin
     ymin -= 0.05 * length
@@ -21,10 +26,23 @@ def get_y_min_max(nparr):
 
 
 
-def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set_legend=False):
-    # TODO: possibility to scale plot (minmax, unit=var, etc.)
+def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set_legend=False, box=False, ylims=None):
+    """
+    build parallel coordinates image corresponding to `values`
+    :param values: 2-dimensional numpy array
+    :param labels: optional, array containing labels for each row of `values`
+    :param color_dict: dict, optional, ignored if ` labels` not provided. {label -> color} dict.
+    If `labels` is provided but not `color_dict`, the color of each label will be automatically chosen
+    :param save_path: path to the file where the resulting image will be stored.
+    If not provided, image will not be stored
+    :param set_legend: boolean, optional, ignored if `labels`not provided. If to set a color legend for the labels or not
+    :param box: boolean. If to set a frame (x-axis, y-axis etc.) for the resulting image
+    :param ylims: (ymin, ymax). If not provided, will be set to the result to `get_y_min_nax(values)`
+    :return: parallel coordinates image corresponding to `values`
+    """
     fig, ax = plt.subplots()
-    segments = [[(i, values[j, i]), (i + 1, values[j, i + 1])] for j in range(values.shape[0]) for i in range(values.shape[1] - 1)]
+    segments = [[(i, values[j, i]), (i + 1, values[j, i + 1])] for j in range(values.shape[0])
+                for i in range(values.shape[1] - 1)]
 
     if labels is not None:
         labels = np.array(labels)
@@ -56,11 +74,20 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set
 
     ax.autoscale()
 
-    # TODO: set x-ticker spaced by unit
+    if ylims is None:
+        ymin, ymax = get_y_min_max(values)
+    else:
+        ymin, ymax = ylims[0], ylims[1]
 
-    ymin, ymax = get_y_min_max(values)
     for i in range(values.shape[1]):
         ax.axvline(x=i, ymin=ymin, ymax=ymax, color='k')
+
+    if not box:
+        plt.tick_params(top='off', bottom='off', left='off', right='off', labelleft='off', labelbottom='off')
+        plt.box(False)
+
+    plt.xlim(0, values.shape[1])
+    plt.ylim(ymin, ymax)
 
     if save_path is not None:
         plt.savefig(save_path)
@@ -68,13 +95,11 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set
     plt.show()
 
 
-
-
-# np array example
-values = np.random.random_sample((10, 5))
-print(values)
-get_paracoord_plot(values)
-labels = ['aaa', 'bbb', 'aaa', 'ccc', 'bbb', 'aaa', 'aaa', 'bbb', 'aaa', 'ccc']
-get_paracoord_plot(values, labels=labels)
-color_dict = {'aaa': 'b', 'bbb': 'r', 'ccc': 'g'}
-get_paracoord_plot(values, labels=labels, color_dict=color_dict, save_path='images/random_example.jpg', set_legend=True)
+# # np array example
+# values = np.random.random_sample((10, 5))
+# print(values)
+# get_paracoord_plot(values)
+# labels = ['aaa', 'bbb', 'aaa', 'ccc', 'bbb', 'aaa', 'aaa', 'bbb', 'aaa', 'ccc']
+# get_paracoord_plot(values, labels=labels)
+# color_dict = {'aaa': 'b', 'bbb': 'r', 'ccc': 'g'}
+# get_paracoord_plot(values, labels=labels, color_dict=color_dict, save_path='images/random_example.jpg', set_legend=True)
