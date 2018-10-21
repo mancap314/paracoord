@@ -1,16 +1,21 @@
-from distutils.core import setup
+import setuptools
 
-setup(name='funniest',
-      version='0.1',
-      description='Plot 2-dimensional arrays in parallel coordinates',
-      url='https://github.com/mancap314/paracoord',
-      author='Manuel Capel',
-      author_email='manuel.capel82@gmail.com   ',
-      license='MIT',
-      packages=['paracoord'],
-      install_requires=[
-          'numpy',
-          'matplotlib'
-          'itertools'
-      ],
-      zip_safe=False)
+with open('README.md', 'r') as f:
+    long_description = f.read()
+
+setuptools.setup(
+    name='paracoord',
+    version='0.1',
+    author='Manuel Capel',
+    author_email='manuel.capel82@gmail.com',
+    description='Parallel Coordinates plotting',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    url='https://github.com/mancap314/paracoord',
+    packages=setuptools.find_packages(),
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+    ],
+)
