@@ -28,15 +28,15 @@ get_paracoord_plot(values, labels=labels, color_dict=color_dict, save_path='rand
 ```
 
 ## Options
-`values`: 2-dimensional numpy array
-`labels`: optional, array containing labels for each row of `values`
-`color_dict`: dict, optional, ignored if ` labels` not provided. {label -> color} dict.
+* `values`: 2-dimensional numpy array
+* `labels`: optional, array containing labels for each row of `values`
+* `color_dict`: dict, optional, ignored if ` labels` not provided. {label -> color} dict.
 If `labels` is provided but not `color_dict`, the color of each label will be automatically chosen
-`save_path`: path to the file where the resulting image will be stored.
+* `save_path`: path to the file where the resulting image will be stored.
 If not provided, image will not be stored
-`set_legend`: boolean, optional, ignored if `labels`not provided. If to set a color legend for the labels or not
-`box`: boolean. If to set a frame (x-axis, y-axis etc.) for the resulting image
-`ylims`: (ymin, ymax). If not provided, will be set to the result to `get_y_min_nax(values)`
+* `set_legend`: boolean, optional, ignored if `labels`not provided. If to set a color legend for the labels or not
+* `box`: boolean. If to set a frame (x-axis, y-axis etc.) for the resulting image
+* `ylims`: (ymin, ymax). If not provided, will be set to the result to `get_y_min_nax(values)`
 
 
 ## Final note
