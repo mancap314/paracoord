@@ -93,13 +93,3 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set
         plt.savefig(save_path)
 
     plt.show()
-
-
-# # np array example
-# values = np.random.random_sample((10, 5))
-# print(values)
-# get_paracoord_plot(values)
-# labels = ['aaa', 'bbb', 'aaa', 'ccc', 'bbb', 'aaa', 'aaa', 'bbb', 'aaa', 'ccc']
-# get_paracoord_plot(values, labels=labels)
-# color_dict = {'aaa': 'b', 'bbb': 'r', 'ccc': 'g'}
-# get_paracoord_plot(values, labels=labels, color_dict=color_dict, save_path='images/random_example.jpg', set_legend=True)
