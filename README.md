@@ -39,6 +39,11 @@ If not provided, image will not be stored
 * `ylims`: (ymin, ymax). If not provided, will be set to the result to `get_y_min_nax(values)`
 
 
+## Installation
+```
+pip install paracoord
+```
+
 ## Final note
 Enjoy, do whatever you want with it as long as you don't hold me responsible for the consequences :)
 Suggestions, remarks, critics, pull requests appreciated
