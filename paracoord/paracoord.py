@@ -1,5 +1,6 @@
 import itertools
 import numpy as np
+from sklearn.preprocessing import scale
 import matplotlib.pyplot as plt
 from matplotlib import collections  as mc
 
@@ -26,7 +27,7 @@ def get_y_min_max(nparr):
 
 
 
-def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set_legend=False, box=False, ylims=None):
+def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set_legend=False, box=False, ylims=None, do_scale=None, show=True):
     """
     build parallel coordinates image corresponding to `values`
     :param values: 2-dimensional numpy array
@@ -37,7 +38,9 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set
     If not provided, image will not be stored
     :param set_legend: boolean, optional, ignored if `labels`not provided. If to set a color legend for the labels or not
     :param box: boolean. If to set a frame (x-axis, y-axis etc.) for the resulting image
-    :param ylims: (ymin, ymax). If not provided, will be set to the result to `get_y_min_nax(values)`
+    :param ylims: (ymin, ymax). If not provided, will be set to the result to `get_y_min_nax(values)
+    :param do_scale: boolean. If True, `ylims` is ignored and `values` are centered (vertically) around their mean with std deviation of 1
+    :param show: boolean. If to show the image though it is saved. If the image is not saved then it is shown anyway.
     :return: parallel coordinates image corresponding to `values`
     """
     fig, ax = plt.subplots()
@@ -74,7 +77,10 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set
 
     ax.autoscale()
 
-    if ylims is None:
+    if do_scale:
+        values = scale(values, axis=0, copy=True)
+
+    if ylims is None or do_scale:
         ymin, ymax = get_y_min_max(values)
     else:
         ymin, ymax = ylims[0], ylims[1]
@@ -90,6 +96,8 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set
     plt.ylim(ymin, ymax)
 
     if save_path is not None:
-        plt.savefig(save_path)
-
-    plt.show()
+        plt.savefig(save_path, bbox_inches='tight')
+        if show:
+            plt.show()
+    else:
+        plt.show()
