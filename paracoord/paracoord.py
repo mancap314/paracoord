@@ -27,7 +27,7 @@ def get_y_min_max(nparr):
 
 
 
-def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set_legend=False, box=False, ylims=None, do_scale=None, show=True):
+def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, format='png', set_legend=False, box=False, show_vertical_axis=True, ylims=None, do_scale=None, show=True):
     """
     build parallel coordinates image corresponding to `values`
     :param values: 2-dimensional numpy array
@@ -36,8 +36,10 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set
     If `labels` is provided but not `color_dict`, the color of each label will be automatically chosen
     :param save_path: path to the file where the resulting image will be stored.
     If not provided, image will not be stored
+    :param format: str. format of the saved image (if saved), must belong to ['png', 'jpg', 'svg']
     :param set_legend: boolean, optional, ignored if `labels`not provided. If to set a color legend for the labels or not
     :param box: boolean. If to set a frame (x-axis, y-axis etc.) for the resulting image
+    :param show_vertical_axis: boolean. If to plot the vertical axis of the coordinates
     :param ylims: (ymin, ymax). If not provided, will be set to the result to `get_y_min_nax(values)
     :param do_scale: boolean. If True, `ylims` is ignored and `values` are centered (vertically) around their mean with std deviation of 1
     :param show: boolean. If to show the image though it is saved. If the image is not saved then it is shown anyway.
@@ -85,8 +87,9 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set
     else:
         ymin, ymax = ylims[0], ylims[1]
 
-    for i in range(values.shape[1]):
-        ax.axvline(x=i, ymin=ymin, ymax=ymax, color='k')
+    if show_vertical_axis:
+        for i in range(values.shape[1]):
+            ax.axvline(x=i, ymin=ymin, ymax=ymax, color='k')
 
     if not box:
         plt.tick_params(top='off', bottom='off', left='off', right='off', labelleft='off', labelbottom='off')
@@ -96,8 +99,16 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, set
     plt.ylim(ymin, ymax)
 
     if save_path is not None:
-        plt.savefig(save_path, bbox_inches='tight')
+        assert format in ['png', 'jpg', 'svg'], 'format must belong to [\'png\', \'jpg\', \'svg\']'
+        plt.savefig(save_path, bbox_inches='tight', format=format)
         if show:
             plt.show()
     else:
         plt.show()
+
+    # Clear the current axes.
+    plt.cla()
+    # Clear the current figure.
+    plt.clf()
+    # Closes all the figure windows.
+    plt.close('all')
