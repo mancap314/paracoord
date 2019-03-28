@@ -27,7 +27,7 @@ def get_y_min_max(nparr):
 
 
 
-def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, format='png', set_legend=False, box=False, show_vertical_axis=True, ylims=None, do_scale=None, show=True):
+def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, format='png', dim=(100, 50), linewidths=1, set_legend=False, box=False, show_vertical_axis=True, ylims=None, do_scale=None, show=True):
     """
     build parallel coordinates image corresponding to `values`
     :param values: 2-dimensional numpy array
@@ -37,6 +37,8 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, for
     :param save_path: path to the file where the resulting image will be stored.
     If not provided, image will not be stored
     :param format: str. format of the saved image (if saved), must belong to ['png', 'jpg', 'svg']
+    :param dim: (int, int), dimension (in pixels) of the resulting image (for some reasons, the persisted images will not have exactly this size)
+    :param linewidths: int, width (int px) of the plotted line(s)
     :param set_legend: boolean, optional, ignored if `labels`not provided. If to set a color legend for the labels or not
     :param box: boolean. If to set a frame (x-axis, y-axis etc.) for the resulting image
     :param show_vertical_axis: boolean. If to plot the vertical axis of the coordinates
@@ -45,7 +47,10 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, for
     :param show: boolean. If to show the image though it is saved. If the image is not saved then it is shown anyway.
     :return: parallel coordinates image corresponding to `values`
     """
-    fig, ax = plt.subplots()
+    dpi = 100
+    figsize = (dim[0] / dpi, dim[1] / dpi)
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+
     segments = [[(i, values[j, i]), (i + 1, values[j, i + 1])] for j in range(values.shape[0])
                 for i in range(values.shape[1] - 1)]
 
@@ -67,14 +72,14 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, for
         for color_value in color_dict.values():
             # Divide segments by color
             segments_color = [segments[i] for i in range(len(segments)) if colors[i] == color_value]
-            lc = mc.LineCollection(segments_color, linewidths=2, colors=color_value)
+            lc = mc.LineCollection(segments_color, linewidths=linewidths, colors=color_value)
             ax.add_collection(lc)
             lcs.append(lc)
         if set_legend:
             ax.legend(lcs, distinct_labels, bbox_to_anchor=(1, 1))
 
     else:
-        lc = mc.LineCollection(segments, linewidths=2, colors='b')
+        lc = mc.LineCollection(segments, linewidths=linewidths, colors='b')
         ax.add_collection(lc)
 
     ax.autoscale()
@@ -100,7 +105,7 @@ def get_paracoord_plot(values, labels=None, color_dict=None, save_path=None, for
 
     if save_path is not None:
         assert format in ['png', 'jpg', 'svg'], 'format must belong to [\'png\', \'jpg\', \'svg\']'
-        plt.savefig(save_path, bbox_inches='tight', format=format)
+        plt.savefig(save_path, bbox_inches='tight', format=format, pad_inches=0)
         if show:
             plt.show()
     else:

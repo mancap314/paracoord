@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setuptools.setup(
     name='paracoord',
-    version='0.4',
+    version='0.5',
     author='Manuel Capel',
     author_email='manuel.capel82@gmail.com',
     description='Parallel Coordinates plotting',
